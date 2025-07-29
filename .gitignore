@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+ENV/
+.venv/
+.Python
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Models (too large for GitHub)
+models/
+*.h5
+
+# Static uploads (user images)
+static/uploads/
+
+# Mac OS
+.DS_Store
+
+# VS Code settings
+.vscode/
+
+# Idea files (for PyCharm or WebStorm)
+.idea/
+
+# Node modules (if you add frontend)
+node_modules/
+
+# Log files
+*.log
+
+# Flask / Django cache
+instance/
+*.sqlite3
+
+# Env files (secrets)
+.env

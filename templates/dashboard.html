@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>NailVision</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="static/img/nailIcon.png" rel="icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link href="static/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="static/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="static/vendor/aos/aos.css" rel="stylesheet">
+  <link href="static/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="static/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="static/css/main.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" >
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+  <style>
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100vw;
+      overflow-x: hidden;
+    }
+    .hero.section {
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+    }
+
+
+    #dashboard-card {
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      margin: 0 !important;
+      width: 100vw;
+    }
+
+    .container-fluid {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+
+
+    .sidebar {
+      background: linear-gradient(to right, #0d6efd, #6610f2);
+      color: #fff;
+    }
+
+    .sidebar .nav-link {
+      color: #ffffff;
+      font-weight: 500;
+      border-radius: 0;
+      transition: background 0.3s ease;
+    }
+
+    .sidebar .nav-link.active,
+    .sidebar .nav-link:hover {
+      background-color: #465cd8;
+      color: #ffffff;
+    }
+
+    .tab-content {
+      background-color: #f8f9fa;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .form-control,
+    .btn {
+      width: 100%;
+    }
+
+    .badge {
+      font-size: 1rem;
+    }
+
+    .table th,
+    .table td {
+      vertical-align: middle;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar .nav-link {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    .text-gradient {
+      background: linear-gradient(to right, #0d6efd, #6610f2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-button {
+      background: linear-gradient(to right, #0d6efd, #6610f2);
+      border: none;
+      color: white;
+      font-weight: 600;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .gradient-button:hover {
+      filter: brightness(1.1);
+      transform: scale(1.02);
+    }
+
+    .spinner-border {
+      animation-duration: 0.8s;
+    }
+
+    .card ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    .text-gradient {
+      background: linear-gradient(to right, #0d6efd, #6610f2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      transition: 0.3s ease-in-out;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+     .text-gradient {
+        background: linear-gradient(to right, #0d6efd, #6610f2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .card:hover {
+        transition: 0.3s ease-in-out;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+      }
+
+      #contact .card i {
+        transition: transform 0.3s ease;
+      }
+
+      #contact .card:hover i {
+        transform: scale(1.1);
+      }
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.4s ease;
+    }
+
+    .icon-box {
+      transition: all 0.3s ease;
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hover-glow:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 123, 255, 0.1);
+      background-color: #f8f9fa;
+    }
+  </style>
+</head>
+<body class="index-page">
+
+
+
+  <header class="main-header d-flex align-items-center px-4" style="height: 10vh;">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+      <a href="/" class="logo d-flex align-items-center me-auto">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <img src="static/img/nailIcon.png" width="40px" alt="">
+        <h1 class="sitename">NailVision</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="/">Logout</a></li>
+        </ul>
+      </nav>
+
+
+    </div>
+  </header>
+
+
+  <!-- Image Upload and Prediction Section -->
+<!--  <section id="image-upload" class="hero section pt-5 mt-5">-->
+<!--    <div class="container">-->
+<!--      <div class="card shadow-lg p-4 mb-5 bg-white rounded">-->
+<!--        <div class="card-body d-flex flex-column align-items-center justify-content-center">-->
+<!--          <h1 class="card-title text-center">Welcome to <span>NailVision</span></h1>-->
+<!--          <p class="card-text text-center">Upload an image of your nail to get predict of nail condition:</p>-->
+<!--          <form action="/predict" id="image-form" method="post" enctype="multipart/form-data" class="d-flex flex-column align-items-center">-->
+<!--            <input type="file" name="file" id="image-input" required class="form-control mb-3">-->
+<!--            <button type="submit" class="btn btn-primary">Submit</button>-->
+<!--          </form>-->
+<!--          <div id="prediction-result" class="prediction-result mt-3">-->
+<!--            {% if label %}-->
+<!--              <div class="row">-->
+
+<!--                <div class="col-md-8">-->
+<!--                  <h1>Prediction Results</h1>-->
+<!--                  <p><span>Magaca xaaladda cidida: </span>{{ label }}</p>-->
+<!--                  <p><span>Qeexidda xaaladda cidida: </span>{{ definition }}</p>-->
+
+<!--                  <p><span>Waxa sababay xaaladdan: </span>{{ causes }}</p>-->
+<!--                  <p><span>Sida looga hortagi karo xaaladdan: </span>{{ prevention }}</p>-->
+<!--                  <p><span>Sida loo daaweyn karo xaaladdan: </span>{{ curation }}</p>-->
+<!--                </div>-->
+<!--                <div class="col-md-4 text-center">-->
+<!--                  <img src="{{ image_url }}" class="img-fluid" alt="Medicine Image" style="max-width: 100%;height: 350px">-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            {% endif %}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </section>-->
+
+<!--<section id="image-upload" class="hero section pt-5 mt-5" style="height: 80vh;">-->
+<!--  <div class="container h-100 d-flex align-items-center justify-content-center">-->
+<!--    <div class="card shadow-lg p-4 w-100" style="max-width: 1000px; height: 100%;">-->
+<!--      <div class="row h-100">-->
+<!--        &lt;!&ndash; Left Navigation Column &ndash;&gt;-->
+<!--        <div class="col-md-3 border-end pe-4">-->
+<!--          <h4 class="mb-4">Explore</h4>-->
+<!--          <ul class="nav flex-column">-->
+<!--            <li class="nav-item mb-2">-->
+<!--              <a href="#" class="nav-link p-0 text-primary" onclick="showSection('upload')">Upload Image</a>-->
+<!--            </li>-->
+<!--            <li class="nav-item mb-2">-->
+<!--              <a href="#" class="nav-link p-0 text-primary" onclick="showSection('model')">Model Info</a>-->
+<!--            </li>-->
+<!--            <li class="nav-item mb-2">-->
+<!--              <a href="#" class="nav-link p-0 text-primary" onclick="showSection('contact')">Contact</a>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Right Dynamic Content Column &ndash;&gt;-->
+<!--        <div class="col-md-8" id="content-area" style="overflow-y: auto;">-->
+
+<!--          &lt;!&ndash; Upload Image Section &ndash;&gt;-->
+<!--          <div id="upload" class="content-tab">-->
+<!--            <h5>Upload Nail Image</h5>-->
+<!--            <p>Upload an image of your nail to predict the condition:</p>-->
+<!--            <form action="/predict" id="image-form" method="post" enctype="multipart/form-data" class="d-flex flex-column align-items-center">&ndash;&gt;-->
+<!--              <input type="file" name="file" id="image-input" required class="form-control mb-3">-->
+<!--              <button type="submit" class="btn btn-primary">Submit</button>-->
+<!--            </form>-->
+<!--          <div id="prediction-result" class="prediction-result mt-3">-->
+<!--            {% if label %}-->
+<!--              <div class="row">-->
+
+<!--                <div class="col-md-8">-->
+<!--                  <h1>Prediction Results</h1>-->
+<!--                  <p><span>Magaca xaaladda cidida: </span>{{ label }}</p>-->
+<!--                  <p><span>Qeexidda xaaladda cidida: </span>{{ definition }}</p>-->
+
+<!--                  <p><span>Waxa sababay xaaladdan: </span>{{ causes }}</p>-->
+<!--                  <p><span>Sida looga hortagi karo xaaladdan: </span>{{ prevention }}</p>-->
+<!--                  <p><span>Sida loo daaweyn karo xaaladdan: </span>{{ curation }}</p>-->
+<!--                </div>-->
+<!--                <div class="col-md-4 text-center">-->
+<!--                  <img src="{{ image_url }}" class="img-fluid" alt="Medicine Image" style="max-width: 100%;height: 350px">-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            {% endif %}-->
+<!--          </div>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; Model Info Section &ndash;&gt;-->
+<!--          <div id="model" class="content-tab d-none">-->
+<!--            <h5>Model Information</h5>-->
+<!--            <p>Our AI model is trained on thousands of annotated nail images to accurately detect multiple nail conditions such as:</p>-->
+<!--            <ul>-->
+<!--              <li>Healthy Nail</li>-->
+<!--              <li>Onychogryphosis</li>-->
+<!--              <li>Blue Finger</li>-->
+<!--              <li>Pitting</li>-->
+<!--              <li>Melanoma</li>-->
+<!--              <li>Bulging</li>-->
+<!--            </ul>-->
+<!--          </div>-->
+
+<!--          &lt;!&ndash; Contact Section &ndash;&gt;-->
+<!--          <div id="contact" class="content-tab d-none">-->
+<!--            <h5>Contact Us</h5>-->
+<!--            <p>If you have questions or feedback, reach out to us:</p>-->
+<!--            <p><strong>Email:</strong> support@nailvision.ai</p>-->
+<!--            <p><strong>Phone:</strong> +252 618797663</p>-->
+<!--          </div>-->
+
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</section>-->
+
+<!--&lt;!&ndash; JS to switch tabs &ndash;&gt;-->
+<!--<script>-->
+<!--  function showSection(sectionId) {-->
+<!--    document.querySelectorAll('.content-tab').forEach(tab => {-->
+<!--      tab.classList.add('d-none');-->
+<!--    });-->
+<!--    document.getElementById(sectionId).classList.remove('d-none');-->
+<!--  }-->
+<!--</script>-->
+
+  <!-- New Tab Section with History Included -->
+<!-- New Tab Section with History Included -->
+<section id="image-upload" class="hero section" style="height: 88vh;">
+  <div class="container-fluid h-100">
+    <div class="w-100 h-100" id="dashboard-card" style="border-radius: 0; box-shadow: none;">
+      <div class="row h-100 g-0">
+        <!-- Sidebar -->
+        <div class="col-md-2 sidebar d-flex flex-column">
+          <div class="nav flex-column nav-pills h-100 py-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <button class="nav-link active text-center" id="upload-tab" data-bs-toggle="pill" data-bs-target="#upload" type="button" role="tab">📤 Upload</button>
+            <button class="nav-link text-center" id="history-tab" data-bs-toggle="pill" data-bs-target="#history" type="button" role="tab">📜 History</button>
+            <button class="nav-link text-center" id="model-tab" data-bs-toggle="pill" data-bs-target="#model" type="button" role="tab">🤖 Model Info</button>
+            <button class="nav-link text-center" id="contact-tab" data-bs-toggle="pill" data-bs-target="#contact" type="button" role="tab">📞 Contact</button>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-10 p-0">
+          <div class="h-100 overflow-auto px-4 py-3" style="max-height: 100vh;" id="main-content-scroll">
+            <div class="tab-content h-100" id="v-pills-tabContent">
+            <!-- Upload Tab -->
+            <div class="tab-pane fade show active" id="upload" role="tabpanel">
+              <div class="text-center mb-5">
+                <h2 class="fw-bold display-6">👁️‍🗨️ Welcome to <span class="text-gradient">NailVision</span></h2>
+                <p class="text-muted fs-5">Upload an image of your nail and let our AI model detect its condition in seconds.</p>
+              </div>
+
+              <!-- Loading Spinner -->
+              <div id="loading-spinner" class="text-center d-none mt-4">
+                <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3 fw-semibold text-muted">Analyzing your image with AI... Please wait.</p>
+              </div>
+
+              <!-- Upload Form and Results Wrapper -->
+              <div id="upload-wrapper">
+                <form action="/predict" method="post" enctype="multipart/form-data" class="mx-auto" style="max-width: 500px;">
+                  <div class="card border-0 shadow-sm p-4 rounded-4">
+                    <label for="file" class="form-label fw-semibold">Select Nail Image</label>
+                    <input type="file" name="file" id="file" required class="form-control form-control-lg mb-4">
+                    <button type="submit" class="btn btn-primary w-100 btn-lg gradient-button">🔍 Predict Condition</button>
+                  </div>
+                </form>
+
+                {% if label %}
+                <div class="card mt-5 shadow-sm border-0 rounded-4 p-4 animate__animated animate__fadeIn">
+                  <div class="row align-items-center">
+                    <div class="col-md-7">
+                      <h4 class="mb-3 text-primary fw-bold">🧐Prediction Results</h4>
+                      <ul class="list-group list-group-flush fs-6">
+                        <li class="list-group-item"><strong>Condition:</strong> {{ label }}</li>
+                        <li class="list-group-item"><strong>Description:</strong> {{ definition }}</li>
+                        <li class="list-group-item"><strong>Causes:</strong> {{ causes }}</li>
+                        <li class="list-group-item"><strong>Prevention:</strong> {{ prevention }}</li>
+                        <li class="list-group-item"><strong>Treatment:</strong> {{ curation }}</li>
+                      </ul>
+                    </div>
+                    <div class="col-md-5 text-center mt-4 mt-md-0">
+                      <img src="{{ image_url }}" class="img-fluid rounded-3 shadow border" alt="Prediction" style="max-height: 300px;">
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+
+
+            <!-- History Tab -->
+            <!-- History Tab -->
+<div class="tab-pane fade" id="history" role="tabpanel">
+  <h3 class="fw-bold mb-3">Prediction History</h3>
+
+  <!-- Flex Row: Left Paragraph & Right Date Input -->
+  <div class="mb-3 d-flex justify-content-between align-items-center flex-wrap">
+    <p class="text-muted mb-2 mb-md-0">Your previous prediction records:</p>
+    <input type="date" id="history-date-filter" class="form-control" style="max-width: 200px;">
+    <input type="text" id="history-condition-filter" class="form-control" style="max-width: 200px;" placeholder="Search by disease name">
+  </div>
+
+  <!-- Table -->
+  <div class="table-responsive mt-3">
+    <table class="table table-bordered table-striped" id="history-table">
+      <thead class="table-primary" id="history-table-header">
+        <tr>
+          <th>Date</th>
+          <th>Condition</th>
+          <th>Definition</th>
+          <th>Image</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Filled dynamically -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+            <!-- Model Info Tab -->
+            <div class="tab-pane fade" id="model" role="tabpanel">
+              <div class="h-100 d-flex flex-column justify-content-center align-items-center text-center animate__animated animate__fadeIn">
+                <h2 class="fw-bold display-5 mb-3 text-gradient">🤖 AI Model Overview</h2>
+                <p class="text-muted fs-5 mb-4 w-75">Our deep learning model is trained on thousands of annotated nail images to identify common and rare nail conditions with precision and speed.</p>
+
+                <div class="row row-cols-1 row-cols-md-3 g-4 w-100 justify-content-center">
+                  <div class="col">
+                    <div class="card shadow-sm border-0 p-4 h-100 animate__animated animate__zoomIn animate__delay-1s">
+                      <div class="card-body">
+                        <h5 class="card-title text-success">✅ Healthy Nail</h5>
+                        <p class="card-text text-muted">Perfect nail health with no abnormalities in color or structure.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="card shadow-sm border-0 p-4 h-100 animate__animated animate__zoomIn animate__delay-1s">
+                      <div class="card-body">
+                        <h5 class="card-title text-primary">🔵 Blue Finger</h5>
+                        <p class="card-text text-muted">Bluish discoloration often due to poor circulation or oxygen levels.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="card shadow-sm border-0 p-4 h-100 animate__animated animate__zoomIn animate__delay-2s">
+                      <div class="card-body">
+                        <h5 class="card-title text-warning">🦠 Pitting</h5>
+                        <p class="card-text text-muted">Small depressions on the nail surface, associated with skin diseases.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="card shadow-sm border-0 p-4 h-100 animate__animated animate__zoomIn animate__delay-2s">
+                      <div class="card-body">
+                        <h5 class="card-title text-danger">🧬 Onychogryphosis</h5>
+                        <p class="card-text text-muted">Thickened and curved nails, typically due to neglect or trauma.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="card shadow-sm border-0 p-4 h-100 animate__animated animate__zoomIn animate__delay-3s">
+                      <div class="card-body">
+                        <h5 class="card-title text-dark">🧪 Acral Lentiginous Melanoma</h5>
+                        <p class="card-text text-muted">Rare skin cancer appearing under nails, often dark lines or spots.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="card shadow-sm border-0 p-4 h-100 animate__animated animate__zoomIn animate__delay-3s">
+                      <div class="card-body">
+                        <h5 class="card-title text-info">🔺 Bulging</h5>
+                        <p class="card-text text-muted">Raised nail plate caused by underlying inflammation or tumors.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <p class="text-muted mt-5 fs-6 w-75">Our dataset is designed to be inclusive, covering a wide variety of real-world conditions to help in early diagnosis based on shape, color, and texture.</p>
+              </div>
+            </div>
+
+
+            <!-- Contact Tab -->
+            <div class="tab-pane fade" id="contact" role="tabpanel">
+  <div class="h-100 d-flex flex-column justify-content-center align-items-center text-center animate__animated animate__fadeIn">
+    <h2 class="fw-bold display-4 mb-2 text-gradient">📬 Contact NailVision</h2>
+    <p class="text-muted fs-5 mb-5 w-75">Need help or want to connect? We’re here for you 24/7. Reach out with your questions or feedback!</p>
+
+    <div class="contact-card shadow-lg glass-effect p-5 w-100" style="max-width: 700px; border-radius: 2rem;">
+      <div class="row g-4">
+        <div class="col-md-4 text-center">
+          <div class="icon-box hover-glow p-4 rounded-4 h-100">
+            <i class="bi bi-envelope-fill fs-1 text-primary mb-2"></i>
+            <h6 class="fw-bold mb-1">Email</h6>
+            <p class="text-muted small mb-0">support@nailvision.ai</p>
+          </div>
+        </div>
+        <div class="col-md-4 text-center">
+          <div class="icon-box hover-glow p-4 rounded-4 h-100">
+            <i class="bi bi-telephone-fill fs-1 text-success mb-2"></i>
+            <h6 class="fw-bold mb-1">Phone</h6>
+            <p class="text-muted small mb-0">+252 618797663</p>
+          </div>
+        </div>
+        <div class="col-md-4 text-center">
+          <div class="icon-box hover-glow p-4 rounded-4 h-100">
+            <i class="bi bi-geo-alt-fill fs-1 text-danger mb-2"></i>
+            <h6 class="fw-bold mb-1">Office</h6>
+            <p class="text-muted small mb-0">Mogadishu, Somalia</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+          </div> <!-- End tab-content -->
+        </div> <!-- End Content Column -->
+      </div> <!-- End Row -->
+    </div>
+  </div>
+</section>
+
+  <!-- Your other sections here -->
+
+  <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="static/vendor/aos/aos.js"></script>
+  <script src="static/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="static/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+ <script>
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.querySelector('form[action="/predict"]');
+  const spinner = document.getElementById('loading-spinner');
+  const wrapper = document.getElementById('upload-wrapper');
+
+  // Spinner on form submit
+  if (form && spinner && wrapper) {
+    form.addEventListener('submit', function () {
+      wrapper.classList.add('d-none');
+      spinner.classList.remove('d-none');
+    });
+  }
+
+  const historyTab = document.querySelector('#history-tab');
+  const historyTable = document.querySelector('#history-table tbody');
+  const dateInput = document.getElementById('history-date-filter');
+  const conditionInput = document.getElementById('history-condition-filter');
+
+  // Load history records
+  async function loadHistoryRecords(filterDate = null, filterCondition = null) {
+    try {
+      const response = await fetch('/history');
+      const data = await response.json();
+      historyTable.innerHTML = '';
+
+      let filtered = data;
+      if (filterDate) {
+        filtered = filtered.filter(record => new Date(record.created_at).toISOString().slice(0, 10) === filterDate);
+      }
+      if (filterCondition) {
+        const cond = filterCondition.toLowerCase();
+        filtered = filtered.filter(record => record.label && record.label.toLowerCase().startsWith(cond));
+      }
+
+      if (filtered.length === 0) {
+        historyTable.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No records found.</td></tr>';
+        return;
+      }
+
+      filtered.forEach(record => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${new Date(record.created_at).toLocaleString()}</td>
+          <td>${record.label}</td>
+          <td>${record.definition.slice(0, 100)}...</td>
+          <td><img src="${record.image_url}" height="50" alt="Image"></td>
+          <td><button class="btn btn-sm delete-btn text-danger" data-id="${record.id}">✖</button></td>
+        `;
+        historyTable.appendChild(tr);
+      });
+    } catch (err) {
+      console.error('Error loading history:', err);
+      historyTable.innerHTML = '<tr><td colspan="5" class="text-danger text-center">Error loading history data</td></tr>';
+    }
+  }
+
+  // Show history when tab is activated
+  if (historyTab) {
+    historyTab.addEventListener('shown.bs.tab', () => loadHistoryRecords());
+  }
+
+  // Filter history by selected date
+  if (dateInput) {
+    dateInput.addEventListener('change', (e) => {
+      const selectedDate = e.target.value;
+      const conditionValue = conditionInput ? conditionInput.value : null;
+      loadHistoryRecords(selectedDate, conditionValue);
+    });
+  }
+
+  // Filter history by disease name as user types
+  if (conditionInput) {
+    conditionInput.addEventListener('input', (e) => {
+      const conditionValue = e.target.value;
+      const dateValue = dateInput ? dateInput.value : null;
+      loadHistoryRecords(dateValue, conditionValue);
+    });
+  }
+
+  
+
+
+
+  // Delete functionality
+  document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('delete-btn')) {
+      const row = e.target.closest('tr');
+      const id = e.target.getAttribute('data-id');
+
+      if (confirm("Are you sure you want to delete this record?")) {
+        fetch(`/delete-history/${id}`, {
+          method: 'DELETE'
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              row.remove();
+            } else {
+              alert("Failed to delete record.");
+            }
+          })
+          .catch(() => alert("Error deleting record."));
+      }
+    }
+  });
+});
+
+
+</script>
+
+
+</body>
+</html>

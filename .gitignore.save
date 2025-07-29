@@ -1,0 +1,18 @@
+^X
+
+
+
+
+
+models/
+static/uploads/
+.DS_Store
+
+
+git rm --cached models/*.h5
+
+
+6^^^X
+^X
+
+
