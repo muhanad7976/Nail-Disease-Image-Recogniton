@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from flask import Flask, request, render_template, jsonify, redirect, url_for, send_from_directory, session
+from flask import Flask, request, render_template, jsonify, redirect, url_for, send_from_directory, session, flash
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
 import tensorflow as tf
@@ -8,6 +8,7 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.optimizers import Adamax
 from PIL import Image
 from werkzeug.utils import secure_filename
+from functools import wraps
 
 # Flask app setup
 app = Flask(__name__)
@@ -26,6 +27,27 @@ def get_db_connection():
         password='',
         database='nail_diseases_db'
     )
+
+# Admin decorator
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'email' not in session:
+            return redirect(url_for('loginPage'))
+        
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT role FROM users WHERE email = %s", (session['email'],))
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        
+        if not user or user['role'] != 'admin':
+            flash('Access denied. Admin privileges required.', 'error')
+            return redirect(url_for('home'))
+        
+        return f(*args, **kwargs)
+    return decorated_function
 
 # Fetch nail condition details from DB
 def fetch_nail_details(nailDiseaseName):
@@ -63,7 +85,7 @@ def signup():
     cursor = conn.cursor()
 
     try:
-        cursor.execute("INSERT INTO users (name, email, password) VALUES (%s, %s, %s)", (name, email, password))
+        cursor.execute("INSERT INTO users (name, email, password, role) VALUES (%s, %s, %s, 'user')", (name, email, password))
         conn.commit()
         return jsonify(success=True, message="User registered successfully!")
     except mysql.connector.Error as err:
@@ -88,6 +110,7 @@ def login():
 
     if user and check_password_hash(user['password'], password):
         session['email'] = email
+        session['role'] = user.get('role', 'user')
         return jsonify({"success": True})
     else:
         return jsonify({"success": False, "message": "Check your email or password"})
@@ -161,6 +184,99 @@ def history():
 
     return jsonify(records)
 
+# Check if user is admin
+@app.route('/check-admin')
+def check_admin():
+    email = session.get('email')
+    if not email:
+        return jsonify({"is_admin": False})
+    
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT role FROM users WHERE email = %s", (email,))
+    user = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    
+    return jsonify({"is_admin": user and user['role'] == 'admin'})
+
+# Admin Users Management
+@app.route('/admin/users', methods=['GET', 'POST'])
+@admin_required
+def admin_users():
+    if request.method == 'POST':
+        method = request.form.get('_method', 'POST')
+        
+        if method == 'POST':
+            # Add new user
+            username = request.form.get('username')
+            email = request.form.get('email')
+            full_name = request.form.get('full_name')
+            password = generate_password_hash(request.form.get('password'))
+            role = request.form.get('role', 'user')
+            
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            try:
+                cursor.execute("INSERT INTO users (name, email, password, role) VALUES (%s, %s, %s, %s)", 
+                             (username, email, password, role))
+                conn.commit()
+                flash('User added successfully!', 'success')
+            except mysql.connector.Error as err:
+                flash(f'Error adding user: {err}', 'error')
+            finally:
+                cursor.close()
+                conn.close()
+                
+        elif method == 'PATCH':
+            # Update user role
+            user_id = request.form.get('user_id')
+            role = request.form.get('role')
+            
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            try:
+                cursor.execute("UPDATE users SET role = %s WHERE id = %s", (role, user_id))
+                conn.commit()
+                flash('User role updated successfully!', 'success')
+            except mysql.connector.Error as err:
+                flash(f'Error updating user: {err}', 'error')
+            finally:
+                cursor.close()
+                conn.close()
+                
+        elif method == 'DELETE':
+            # Delete user
+            user_id = request.form.get('user_id')
+            
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            try:
+                cursor.execute("DELETE FROM users WHERE id = %s", (user_id,))
+                conn.commit()
+                flash('User deleted successfully!', 'success')
+            except mysql.connector.Error as err:
+                flash(f'Error deleting user: {err}', 'error')
+            finally:
+                cursor.close()
+                conn.close()
+    
+    # Get all users with detection counts (excluding current admin)
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT u.*, COUNT(h.id) as detection_count 
+        FROM users u 
+        LEFT JOIN history h ON u.email = h.email 
+        WHERE u.email != %s
+        GROUP BY u.id 
+        ORDER BY u.created_at DESC
+    """, (session['email'],))
+    users = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    
+    return render_template('admin_users.html', users=users)
 
 # Predict nail condition
 def predict_nail(model, image_path):
@@ -188,7 +304,6 @@ def predict_nail(model, image_path):
 
     return predicted_class, score[predicted_class_index].numpy() * 100
 
-
 @app.route('/delete-history/<int:history_id>', methods=['DELETE'])
 def delete_history(history_id):
     email = session.get('email')
@@ -204,12 +319,58 @@ def delete_history(history_id):
 
     return jsonify({'success': True})
 
+# Logout route
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return jsonify({"success": True})
 
 # Serve uploaded files
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+# Create admin user if not exists
+def create_admin_user():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    try:
+        # First, add the role column if it doesn't exist
+        cursor.execute("""
+            ALTER TABLE users 
+            ADD COLUMN role ENUM('user', 'admin') DEFAULT 'user' 
+            AFTER password
+        """)
+        print("✅ Added 'role' column to users table")
+    except Exception as e:
+        if "Duplicate column name" in str(e):
+            print("✅ 'role' column already exists")
+        else:
+            print(f"⚠️ Error adding role column: {e}")
+    
+    # Check if admin user exists
+    cursor.execute("SELECT * FROM users WHERE email = 'admin@nailvision.com'")
+    admin_user = cursor.fetchone()
+    
+    if not admin_user:
+        # Create admin user
+        admin_password = generate_password_hash('admin123')
+        cursor.execute("""
+            INSERT INTO users (name, email, password, role) 
+            VALUES ('Admin User', 'admin@nailvision.com', %s, 'admin')
+        """, (admin_password,))
+        conn.commit()
+        print("✅ Admin user created successfully!")
+        print("Email: admin@nailvision.com")
+        print("Password: admin123")
+    else:
+        print("✅ Admin user already exists!")
+    
+    cursor.close()
+    conn.close()
+
 # Run server
 if __name__ == '__main__':
+    create_admin_user()  # Create admin user on startup
     app.run(debug=True, port=5050)

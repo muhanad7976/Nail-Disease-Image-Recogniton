@@ -342,6 +342,7 @@
             <button class="nav-link text-center" id="history-tab" data-bs-toggle="pill" data-bs-target="#history" type="button" role="tab">📜 History</button>
             <button class="nav-link text-center" id="model-tab" data-bs-toggle="pill" data-bs-target="#model" type="button" role="tab">🤖 Model Info</button>
             <button class="nav-link text-center" id="contact-tab" data-bs-toggle="pill" data-bs-target="#contact" type="button" role="tab">📞 Contact</button>
+            <button class="nav-link text-center" id="admin-tab" onclick="window.location.href='/admin/users'" type="button" style="display: none;">👑 Admin</button>
           </div>
         </div>
 
@@ -367,12 +368,12 @@
               <!-- Upload Form and Results Wrapper -->
               <div id="upload-wrapper">
                 <form action="/predict" method="post" enctype="multipart/form-data" class="mx-auto" style="max-width: 500px;">
-                  <div class="card border-0 shadow-sm p-4 rounded-4">
-                    <label for="file" class="form-label fw-semibold">Select Nail Image</label>
-                    <input type="file" name="file" id="file" required class="form-control form-control-lg mb-4">
-                    <button type="submit" class="btn btn-primary w-100 btn-lg gradient-button">🔍 Predict Condition</button>
-                  </div>
-                </form>
+  <div class="card border-0 shadow-sm p-4 rounded-4">
+    <label for="file" class="form-label fw-semibold">Select Nail Image</label>
+    <input type="file" name="file" id="file" accept="image/*" required class="form-control form-control-lg mb-4">
+    <button type="submit" class="btn btn-primary w-100 btn-lg gradient-button">🔍 Predict Condition</button>
+  </div>
+</form>
 
                 {% if label %}
                 <div class="card mt-5 shadow-sm border-0 rounded-4 p-4 animate__animated animate__fadeIn">
@@ -649,6 +650,16 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   });
+
+  // Check if user is admin and show admin tab
+  fetch('/check-admin')
+    .then(response => response.json())
+    .then(data => {
+      if (data.is_admin) {
+        document.getElementById('admin-tab').style.display = 'block';
+      }
+    })
+    .catch(err => console.error('Error checking admin status:', err));
 });
 
 
