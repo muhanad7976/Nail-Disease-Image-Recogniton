@@ -163,32 +163,39 @@
                   <div class="card mb-5">
                     <div class="card-body p-4">
                       <h3 class="fw-bold mb-4">Add New User</h3>
-                      <form action="{{ url_for('admin_users') }}" method="POST">
+                                             <form action="{{ url_for('admin_users') }}" method="POST" autocomplete="off">
                         <div class="row">
-                          <div class="col-md-6 mb-3">
-                            <label for="username" class="form-label fw-semibold">Username</label>
-                            <input type="text" name="username" id="username" required class="form-control">
-                          </div>
-                          <div class="col-md-6 mb-3">
-                            <label for="email" class="form-label fw-semibold">Email</label>
-                            <input type="email" name="email" id="email" required class="form-control">
-                          </div>
-                          <div class="col-md-6 mb-3">
-                            <label for="full_name" class="form-label fw-semibold">Full Name</label>
-                            <input type="text" name="full_name" id="full_name" required class="form-control">
-                          </div>
-                          <div class="col-md-6 mb-3">
-                            <label for="password" class="form-label fw-semibold">Password</label>
-                            <input type="password" name="password" id="password" required class="form-control">
-                          </div>
-                          <div class="col-md-6 mb-3">
-                            <label for="role" class="form-label fw-semibold">Role</label>
-                            <select name="role" id="role" class="form-control">
-                              <option value="user">User</option>
-                              <option value="admin">Admin</option>
-                            </select>
-                          </div>
-                          <div class="col-12">
+                                                     <div class="col-md-6 mb-3">
+                             <label for="username" class="form-label fw-semibold">Username</label>
+                             <input type="text" name="username" id="username" required class="form-control" autocomplete="off" value="">
+                           </div>
+                           <div class="col-md-6 mb-3">
+                             <label for="email" class="form-label fw-semibold">Email</label>
+                             <input type="email" name="email" id="email" required class="form-control" autocomplete="off" value="">
+                           </div>
+                           <div class="col-md-6 mb-3">
+                             <label for="full_name" class="form-label fw-semibold">Full Name</label>
+                             <input type="text" name="full_name" id="full_name" required class="form-control" autocomplete="off" value="">
+                           </div>
+                           <div class="col-md-6 mb-3">
+                             <label for="password" class="form-label fw-semibold">Password</label>
+                             <input type="password" name="password" id="password" required class="form-control" autocomplete="off" value="">
+                           </div>
+                                                     <div class="col-md-6 mb-3">
+                             <label for="role" class="form-label fw-semibold">Role</label>
+                             <select name="role" id="role" class="form-control">
+                               <option value="user">User</option>
+                               <option value="admin">Admin</option>
+                             </select>
+                           </div>
+                           <div class="col-md-6 mb-3">
+                             <label for="status" class="form-label fw-semibold">Status</label>
+                             <select name="status" id="status" class="form-control">
+                               <option value="active">Active</option>
+                               <option value="inactive">Inactive</option>
+                             </select>
+                           </div>
+                           <div class="col-12">
                             <button type="submit" class="btn btn-primary w-100 gradient-button">Add User</button>
                           </div>
                         </div>
@@ -204,16 +211,17 @@
                     <div class="card-body p-0">
                       <div class="table-responsive">
                         <table class="table table-hover mb-0">
-                          <thead>
-                            <tr>
-                              <th>User</th>
-                              <th>Email</th>
-                              <th>Role</th>
-                              <th>Detections</th>
-                              <th>Joined</th>
-                              <th>Actions</th>
-                            </tr>
-                          </thead>
+                                                     <thead>
+                             <tr>
+                               <th>User</th>
+                               <th>Email</th>
+                               <th>Role</th>
+                               <th>Status</th>
+                               <th>Detections</th>
+                               <th>Joined</th>
+                               <th>Actions</th>
+                             </tr>
+                           </thead>
                           <tbody>
                             {% for user in users %}
                             <tr>
@@ -229,17 +237,27 @@
                                 </div>
                               </td>
                               <td>{{ user.email }}</td>
-                              <td>
-                                <form action="{{ url_for('admin_users') }}" method="POST" class="d-inline">
-                                  <input type="hidden" name="_method" value="PATCH">
-                                  <input type="hidden" name="user_id" value="{{ user.id }}">
-                                  <select name="role" onchange="this.form.submit()" class="form-select form-select-sm">
-                                    <option value="user" {% if user.role == 'user' %}selected{% endif %}>User</option>
-                                    <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
-                                  </select>
-                                </form>
-                              </td>
-                              <td>{{ user.detection_count or 0 }}</td>
+                                                             <td>
+                                 <form action="{{ url_for('admin_users') }}" method="POST" class="d-inline">
+                                   <input type="hidden" name="_method" value="PATCH">
+                                   <input type="hidden" name="user_id" value="{{ user.id }}">
+                                   <select name="role" onchange="this.form.submit()" class="form-select form-select-sm">
+                                     <option value="user" {% if user.role == 'user' %}selected{% endif %}>User</option>
+                                     <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+                                   </select>
+                                 </form>
+                               </td>
+                               <td>
+                                 <form action="{{ url_for('admin_users') }}" method="POST" class="d-inline">
+                                   <input type="hidden" name="_method" value="PATCH">
+                                   <input type="hidden" name="user_id" value="{{ user.id }}">
+                                   <select name="status" onchange="this.form.submit()" class="form-select form-select-sm">
+                                     <option value="active" {% if user.status == 'active' %}selected{% endif %}>Active</option>
+                                     <option value="inactive" {% if user.status == 'inactive' %}selected{% endif %}>Inactive</option>
+                                   </select>
+                                 </form>
+                               </td>
+                               <td>{{ user.detection_count or 0 }}</td>
                               <td>{{ user.created_at.strftime('%Y-%m-%d') if user.created_at else 'N/A' }}</td>
                               <td>
                                 <form action="{{ url_for('admin_users') }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
@@ -301,6 +319,70 @@
         });
       }
     }
+
+    // Clear form fields function
+    function clearForm() {
+      const username = document.getElementById('username');
+      const email = document.getElementById('email');
+      const fullName = document.getElementById('full_name');
+      const password = document.getElementById('password');
+      const role = document.getElementById('role');
+      const status = document.getElementById('status');
+      
+      if (username) username.value = '';
+      if (email) email.value = '';
+      if (fullName) fullName.value = '';
+      if (password) password.value = '';
+      if (role) role.value = 'user';
+      if (status) status.value = 'active';
+      
+      // Force browser to clear any cached values
+      if (username) username.setAttribute('value', '');
+      if (email) email.setAttribute('value', '');
+      if (fullName) fullName.setAttribute('value', '');
+      if (password) password.setAttribute('value', '');
+    }
+
+    // Clear form on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Clear immediately
+      clearForm();
+      
+      // Clear again after a short delay to handle browser cache
+      setTimeout(clearForm, 100);
+      setTimeout(clearForm, 500);
+      setTimeout(clearForm, 1000);
+    });
+
+    // Clear form when page becomes visible (handles back/forward navigation)
+    document.addEventListener('pageshow', function() {
+      clearForm();
+    });
+
+    // Clear form after successful submission
+    document.addEventListener("submit", function (e) {
+      const form = e.target;
+      const method = form.querySelector('input[name="_method"]')?.value;
+      
+      if (method === "DELETE" || method === "PATCH") {
+        e.preventDefault();
+        fetch(form.action, {
+          method: "POST",
+          body: new FormData(form),
+        }).then((response) => {
+          if (response.ok) {
+            window.location.reload();
+          }
+        });
+      } else if (form.action.includes('admin_users') && !method) {
+        // This is the add user form
+        form.addEventListener('submit', function(e) {
+          setTimeout(() => {
+            clearForm();
+          }, 100);
+        });
+      }
+    });
   </script>
 </body>
 </html> 

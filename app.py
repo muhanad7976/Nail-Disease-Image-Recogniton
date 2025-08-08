@@ -109,6 +109,10 @@ def login():
     conn.close()
 
     if user and check_password_hash(user['password'], password):
+        # Check if user is active
+        if user.get('status') == 'inactive':
+            return jsonify({"success": False, "message": "Your account has been deactivated. Please contact an administrator."})
+        
         session['email'] = email
         session['role'] = user.get('role', 'user')
         return jsonify({"success": True})
@@ -118,11 +122,45 @@ def login():
 # Predict Page UI
 @app.route('/dashboard', methods=['GET'])
 def display_recog():
+    email = session.get('email')
+    if not email:
+        return redirect(url_for('loginPage'))
+    
+    # Check if user is active
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT status FROM users WHERE email = %s", (email,))
+    user = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    
+    if user and user.get('status') == 'inactive':
+        session.clear()
+        flash('Your account has been deactivated. Please contact an administrator.', 'error')
+        return redirect(url_for('loginPage'))
+    
     return render_template('dashboard.html')
 
 # Prediction Endpoint (Save to History)
 @app.route('/predict', methods=['POST'])
 def predict():
+    email = session.get('email')
+    if not email:
+        return redirect(url_for('loginPage'))
+    
+    # Check if user is active
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT status FROM users WHERE email = %s", (email,))
+    user = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    
+    if user and user.get('status') == 'inactive':
+        session.clear()
+        flash('Your account has been deactivated. Please contact an administrator.', 'error')
+        return redirect(url_for('loginPage'))
+    
     img_file = request.files['file']
     if img_file:
         filename = secure_filename(img_file.filename)
@@ -148,10 +186,6 @@ def predict():
             definition = causes = prevention = curation = "Not available"
 
         # Save to history
-        email = session.get('email')
-        if not email:
-            return redirect(url_for('loginPage'))
-
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("""
@@ -214,12 +248,13 @@ def admin_users():
             full_name = request.form.get('full_name')
             password = generate_password_hash(request.form.get('password'))
             role = request.form.get('role', 'user')
+            status = request.form.get('status', 'active')
             
             conn = get_db_connection()
             cursor = conn.cursor()
             try:
-                cursor.execute("INSERT INTO users (name, email, password, role) VALUES (%s, %s, %s, %s)", 
-                             (username, email, password, role))
+                cursor.execute("INSERT INTO users (name, email, password, role, status) VALUES (%s, %s, %s, %s, %s)", 
+                             (username, email, password, role, status))
                 conn.commit()
                 flash('User added successfully!', 'success')
             except mysql.connector.Error as err:
@@ -229,16 +264,21 @@ def admin_users():
                 conn.close()
                 
         elif method == 'PATCH':
-            # Update user role
+            # Update user role or status
             user_id = request.form.get('user_id')
             role = request.form.get('role')
+            status = request.form.get('status')
             
             conn = get_db_connection()
             cursor = conn.cursor()
             try:
-                cursor.execute("UPDATE users SET role = %s WHERE id = %s", (role, user_id))
+                if role:
+                    cursor.execute("UPDATE users SET role = %s WHERE id = %s", (role, user_id))
+                    flash('User role updated successfully!', 'success')
+                elif status:
+                    cursor.execute("UPDATE users SET status = %s WHERE id = %s", (status, user_id))
+                    flash('User status updated successfully!', 'success')
                 conn.commit()
-                flash('User role updated successfully!', 'success')
             except mysql.connector.Error as err:
                 flash(f'Error updating user: {err}', 'error')
             finally:
@@ -349,6 +389,20 @@ def create_admin_user():
         else:
             print(f"⚠️ Error adding role column: {e}")
     
+    try:
+        # Add status column if it doesn't exist
+        cursor.execute("""
+            ALTER TABLE users 
+            ADD COLUMN status ENUM('active', 'inactive') DEFAULT 'active' 
+            AFTER role
+        """)
+        print("✅ Added 'status' column to users table")
+    except Exception as e:
+        if "Duplicate column name" in str(e):
+            print("✅ 'status' column already exists")
+        else:
+            print(f"⚠️ Error adding status column: {e}")
+    
     # Check if admin user exists
     cursor.execute("SELECT * FROM users WHERE email = 'admin@nailvision.com'")
     admin_user = cursor.fetchone()
@@ -357,8 +411,8 @@ def create_admin_user():
         # Create admin user
         admin_password = generate_password_hash('admin123')
         cursor.execute("""
-            INSERT INTO users (name, email, password, role) 
-            VALUES ('Admin User', 'admin@nailvision.com', %s, 'admin')
+            INSERT INTO users (name, email, password, role, status) 
+            VALUES ('Admin User', 'admin@nailvision.com', %s, 'admin', 'active')
         """, (admin_password,))
         conn.commit()
         print("✅ Admin user created successfully!")
