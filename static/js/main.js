@@ -207,4 +207,34 @@
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
 
+  /**
+   * Logout functionality
+   */
+  document.addEventListener('DOMContentLoaded', function() {
+    const logoutLink = document.querySelector('a[href="/"]');
+    if (logoutLink) {
+      logoutLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        fetch('/logout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.location.href = '/';
+          }
+        })
+        .catch(error => {
+          console.error('Logout error:', error);
+          // Redirect anyway
+          window.location.href = '/';
+        });
+      });
+    }
+  });
+
 })();

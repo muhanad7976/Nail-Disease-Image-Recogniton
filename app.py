@@ -185,17 +185,27 @@ def predict():
         else:
             definition = causes = prevention = curation = "Not available"
 
-        # Save to history
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO history (email, label, definition, causes, prevention, curation, image_url)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-        """, (email, predicted_nail, definition, causes, prevention, curation, image_url))
-        conn.commit()
-        cursor.close()
-        conn.close()
+        # Save to history only if prediction is not unknown
+        if predicted_nail.lower() != "unknown":
+            # Store valid prediction in database history
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO history (email, label, definition, causes, prevention, curation, image_url)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (email, predicted_nail, definition, causes, prevention, curation, image_url))
+            conn.commit()
+            cursor.close()
+            conn.close()
+            print(f"✅ Prediction '{predicted_nail}' saved to history for user {email}")
+        else:
+            # Don't save unknown predictions to history, but keep the image for display
+            print(f"⚠️ Unknown prediction - not saving to history for user {email}")
 
+        # Always return the template with image_url, even for unknown predictions
+        if predicted_nail.lower() == "unknown":
+            flash('The uploaded image could not be recognized as a known nail condition. Please try with a clearer, more focused image.', 'warning')
+        
         return render_template('dashboard.html', label=predicted_nail,
                                definition=definition, causes=causes,
                                prevention=prevention, curation=curation,
@@ -336,10 +346,11 @@ def predict_nail(model, image_path):
     predicted_class = class_labels[predicted_class_index]
 
     if predicted_class == "unknown":
-        # Return Somali message instead of confidence
+        # Return user-friendly message for unknown predictions
         return predicted_class, (
-            "Marka aan baarnay sawirkan aad soo gelisay ma'ahan mid aan naqaan "
-            "ama ma ahanba sawir cidi ah, sida darteed fadlan soo gali sawir cidi oo saxan."
+            "The uploaded image could not be classified as a known nail condition. "
+            "This might be due to poor image quality, unclear nail area, or the condition "
+            "not being in our training dataset. Please try uploading a clearer, more focused image."
         )
 
     return predicted_class, score[predicted_class_index].numpy() * 100
